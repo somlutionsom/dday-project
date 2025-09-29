@@ -128,8 +128,16 @@ export async function fetchDdayItem(cfg: string) {
   const notion = new Client({ auth: config.token });
 
   try {
-    // Notion API v2에서 올바른 데이터베이스 쿼리 방식
-    const response = await (notion as any).databases.query({
+    // Notion API의 올바른 데이터베이스 쿼리 방식
+    const response = await (notion as unknown as {
+      databases: {
+        query: (params: {
+          database_id: string;
+          page_size: number;
+          sorts: Array<{ property: string; direction: string }>;
+        }) => Promise<{ results: Array<unknown> }>;
+      };
+    }).databases.query({
       database_id: config.dbId,
       page_size: 1,
       sorts: [{ property: 'last_edited_time', direction: 'descending' }]
