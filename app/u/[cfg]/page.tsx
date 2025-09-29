@@ -9,7 +9,7 @@ export default async function WidgetPage({ params }: { params: Promise<{ cfg: st
   
   try {
     initialData = await fetchDdayItem(cfg);
-  } catch (e) {
+  } catch {
     error = '데이터를 불러올 수 없습니다.';
   }
   

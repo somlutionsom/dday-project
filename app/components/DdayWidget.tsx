@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Image from 'next/image';
 
 interface DdayData {
   title: string;
@@ -16,7 +17,7 @@ interface DdayWidgetProps {
 }
 
 export default function DdayWidget({ initialData }: DdayWidgetProps) {
-  const [data, setData] = useState<DdayData | null>(initialData);
+  const [data] = useState<DdayData | null>(initialData);
 
   const calculateDday = (targetDate: string): string => {
     const target = new Date(targetDate);
@@ -82,9 +83,11 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
           overflow: 'hidden',
           boxShadow: '0 8px 32px rgba(255, 255, 255, 0.1)'
         }}>
-          <img 
+          <Image 
             src={data.image} 
             alt={data.title}
+            width={300}
+            height={200}
             style={{
               maxWidth: '300px',
               maxHeight: '200px',

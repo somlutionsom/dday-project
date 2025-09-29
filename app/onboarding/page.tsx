@@ -5,8 +5,7 @@ import { useState } from 'react';
 export default function OnboardingPage() {
   const [step, setStep] = useState(1);
   const [token, setToken] = useState('');
-  const [databases, setDatabases] = useState<any[]>([]);
-  const [selectedDb, setSelectedDb] = useState('');
+  const [databases, setDatabases] = useState<Array<{ id: string; title: string; icon?: string }>>([]);
   const [dbUrl, setDbUrl] = useState('');
   const [embedUrl, setEmbedUrl] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,8 +43,7 @@ export default function OnboardingPage() {
       console.log('DB Selected:', dbId);
       
       await handleFinalSubmit(dbId, 'Image', 'Target Date');
-    } catch (error) {
-      console.error('DB select error:', error);
+    } catch {
       setError('설정 실패');
     }
     setLoading(false);
@@ -72,7 +70,7 @@ export default function OnboardingPage() {
         const errorData = await res.json();
         setError(errorData.error || '데이터베이스 접근 실패');
       }
-    } catch (error) {
+    } catch {
       setError('데이터베이스 접근 실패. URL과 토큰 권한을 확인해주세요.');
     }
     

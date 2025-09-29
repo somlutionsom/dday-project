@@ -43,11 +43,11 @@ export async function listDatabases(token: string) {
                   : db.id,
                 icon: db.icon?.type === 'emoji' ? db.icon.emoji : null
               });
-            } catch (dbError) {
+            } catch {
               continue;
             }
           }
-        } catch (error) {
+        } catch {
           continue;
         }
       }
@@ -159,8 +159,13 @@ export async function fetchDdayItem(cfg: string) {
     // 제목 가져오기
     let title = 'Untitled';
     if ('properties' in page) {
-      const titleProperty = Object.values(page.properties).find((prop: any) => prop.type === 'title');
-      if (titleProperty && titleProperty.type === 'title' && titleProperty.title.length > 0) {
+      const titleProperty = Object.values(page.properties).find((prop: unknown) => {
+        return typeof prop === 'object' && prop !== null && 'type' in prop && prop.type === 'title';
+      });
+      if (titleProperty && typeof titleProperty === 'object' && titleProperty !== null && 
+          'type' in titleProperty && titleProperty.type === 'title' && 
+          'title' in titleProperty && Array.isArray(titleProperty.title) && 
+          titleProperty.title.length > 0 && titleProperty.title[0].plain_text) {
         title = titleProperty.title[0].plain_text;
       }
     }
