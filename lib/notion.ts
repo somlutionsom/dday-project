@@ -128,8 +128,8 @@ export async function fetchDdayItem(cfg: string) {
   const notion = new Client({ auth: config.token });
 
   try {
-    // 최근 수정된 아이템 1개 조회
-    const response = await notion.databases.query({
+    // Notion API v2에서 올바른 데이터베이스 쿼리 방식
+    const response = await (notion as any).databases.query({
       database_id: config.dbId,
       page_size: 1,
       sorts: [{ property: 'last_edited_time', direction: 'descending' }]
