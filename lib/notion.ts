@@ -4,7 +4,8 @@ import { getConfig } from './store';
 export async function validateToken(token: string): Promise<boolean> {
   try {
     const notion = new Client({ auth: token });
-    await notion.users.me();
+    // 간단한 API 호출로 토큰 유효성 검증
+    await notion.search({ page_size: 1 });
     return true;
   } catch {
     return false;
