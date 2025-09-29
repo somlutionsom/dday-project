@@ -103,9 +103,9 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
       }}>
         {/* 헤더바 */}
         <div style={{
-          background: '#B3D9F2',
-          height: '35.5px',
-          borderRadius: '10px 10px 0 0',
+          background: '#CFEBFF',
+          height: '36.5px',
+          borderRadius: '12px 12px 0 0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-end',
