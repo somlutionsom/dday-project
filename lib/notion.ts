@@ -3,9 +3,10 @@ import { getConfig } from './store';
 
 export async function validateToken(token: string): Promise<boolean> {
   try {
-    const notion = new Client({ auth: token });
-    // 간단한 API 호출로 토큰 유효성 검증
-    await notion.search({ page_size: 1 });
+    // 단순히 토큰 형식만 검증 (실제 API 호출 없이)
+    if (!token || !token.startsWith('ntn_') || token.length < 50) {
+      return false;
+    }
     return true;
   } catch {
     return false;
