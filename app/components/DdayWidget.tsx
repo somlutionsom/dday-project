@@ -7,6 +7,7 @@ interface DdayData {
   title: string;
   image: string | null;
   targetDate: string | null;
+  colorTheme: string;
   pageId: string;
   url: string;
 }
@@ -15,6 +16,58 @@ interface DdayWidgetProps {
   initialData: DdayData | null;
   cfg: string;
 }
+
+// 컬러 테마 세트 정의
+const THEME_COLORS = {
+  blue: {
+    header: '#CFEBFF',
+    button1: '#FFFFFF',
+    button2: '#7FC4ED', 
+    button3: '#5BB4E8',
+    badge: '#9CD5FE',
+    shadow: '#CADDEE'
+  },
+  pink: {
+    header: '#FFE6EF',
+    button1: '#FFFFFF',
+    button2: '#FFB6C9',
+    button3: '#FFD6E2',
+    badge: '#FFB6C9',
+    shadow: '#FFD6E2'
+  },
+  red: {
+    header: '#FFE5E5',
+    button1: '#FFFFFF',
+    button2: '#FF4C4C',
+    button3: '#FFB3B3',
+    badge: '#FF4C4C',
+    shadow: '#FFB3B3'
+  },
+  black: {
+    header: '#E6E6E6',
+    button1: '#FFFFFF',
+    button2: '#4D4D4D',
+    button3: '#B3B3B3',
+    badge: '#4D4D4D',
+    shadow: '#B3B3B3'
+  },
+  green: {
+    header: '#E6FFE6',
+    button1: '#FFFFFF',
+    button2: '#66CC99',
+    button3: '#B3E6CC',
+    badge: '#66CC99',
+    shadow: '#B3E6CC'
+  },
+  purple: {
+    header: '#F0E6FF',
+    button1: '#FFFFFF',
+    button2: '#B599FF',
+    button3: '#D6C2FF',
+    badge: '#B599FF',
+    shadow: '#D6C2FF'
+  }
+};
 
 export default function DdayWidget({ initialData }: DdayWidgetProps) {
   const [data] = useState<DdayData | null>(initialData);
@@ -53,6 +106,17 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
           padding: '10px',
           textAlign: 'center' as const
         }}>
+          {/* 헤더바 (로딩 상태) */}
+          <div style={{
+            background: THEME_COLORS.blue.header,
+            height: '36.5px',
+            borderRadius: '12px 12px 0 0',
+            marginTop: '-10px',
+            marginLeft: '-10px',
+            marginRight: '-10px',
+            marginBottom: '10px'
+          }}></div>
+          
           <div style={{
             display: 'flex',
             justifyContent: 'center',
@@ -71,6 +135,10 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
   const dday = calculateDday(data.targetDate);
   const isToday = dday === 'D-DAY';
   const isPast = dday.startsWith('D+');
+
+  // 테마 색상 가져오기
+  const themeKey = data.colorTheme as keyof typeof THEME_COLORS;
+  const colors = THEME_COLORS[themeKey] || THEME_COLORS.blue;
 
   const handleRefresh = () => {
     setIsRotating(true);
@@ -103,7 +171,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
       }}>
         {/* 헤더바 */}
         <div style={{
-          background: '#CFEBFF',
+          background: colors.header,
           height: '36.5px',
           borderRadius: '12px 12px 0 0',
           display: 'flex',
@@ -116,7 +184,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
             width: '8.5px',
             height: '8.5px',
             borderRadius: '50%',
-            background: '#FFFFFF',
+            background: colors.button1,
             opacity: 0.9,
             transition: 'all 0.15s ease-out'
           }}></div>
@@ -124,7 +192,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
             width: '8.5px',
             height: '8.5px',
             borderRadius: '50%',
-            background: '#7FC4ED',
+            background: colors.button2,
             transition: 'all 0.15s ease-out'
           }}></div>
           <div 
@@ -132,7 +200,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
               width: '8.5px',
               height: '8.5px',
               borderRadius: '50%',
-              background: '#5BB4E8',
+              background: colors.button3,
               cursor: 'pointer',
               position: 'relative',
               transition: isRotating ? 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' : 'all 0.15s ease-out',
@@ -229,7 +297,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
               position: 'absolute',
               top: '2px',
               left: '1.5px',
-              background: isToday ? '#C8F0C6' : isPast ? '#FFD6DA' : '#CADDEE',
+              background: colors.shadow,
               borderRadius: '8px',
               width: '100%',
               height: '100%',
@@ -241,7 +309,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
               data-badge="true"
               style={{
                 position: 'relative',
-                background: isToday ? '#A8E6A3' : isPast ? '#FFB3BA' : '#9CD5FE',
+                background: colors.badge,
                 border: '0.5px solid #FFFFFF',
                 borderRadius: '9.68px',
                 padding: '7.26px 14.52px',

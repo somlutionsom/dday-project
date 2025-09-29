@@ -193,6 +193,33 @@ export async function fetchDdayItem(cfg: string) {
       }
     }
 
+    // 색상 테마 가져오기 - Color 컬럼에서
+    let colorTheme = 'blue';
+    const colorProperty = properties[config.colorProp] as unknown;
+    if (typeof colorProperty === 'object' && colorProperty !== null) {
+      const prop = colorProperty as Record<string, unknown>;
+      if (prop.type === 'select' && typeof prop.select === 'object' && prop.select !== null) {
+        const selectObj = prop.select as Record<string, unknown>;
+        if (typeof selectObj.name === 'string') {
+          const colorName = selectObj.name;
+          // 하트 이모지에 따른 테마 매핑
+          if (colorName.includes('💙')) {
+            colorTheme = 'blue';
+          } else if (colorName.includes('🩷')) {
+            colorTheme = 'pink';
+          } else if (colorName.includes('❤️')) {
+            colorTheme = 'red';
+          } else if (colorName.includes('🖤')) {
+            colorTheme = 'black';
+          } else if (colorName.includes('💚')) {
+            colorTheme = 'green';
+          } else if (colorName.includes('💜')) {
+            colorTheme = 'purple';
+          }
+        }
+      }
+    }
+
     // 제목 가져오기 - 간단하게 처리
     let title = 'Untitled';
     if ('properties' in page && typeof page.properties === 'object' && page.properties !== null) {
@@ -215,6 +242,7 @@ export async function fetchDdayItem(cfg: string) {
       title,
       image,
       targetDate,
+      colorTheme,
       pageId: String(page.id || ''),
       url: String(page.url || '')
     };

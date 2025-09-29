@@ -5,6 +5,7 @@ interface ConfigData {
   dbId: string;
   imageProp: string;
   dateProp: string;
+  colorProp: string;
   createdAt: Date;
 }
 
@@ -18,7 +19,8 @@ export function encodeConfig(data: ConfigData): string {
     token: data.token,
     dbId: data.dbId,
     imageProp: data.imageProp,
-    dateProp: data.dateProp
+    dateProp: data.dateProp,
+    colorProp: data.colorProp
   });
   return Buffer.from(configString).toString('base64url');
 }
@@ -33,6 +35,7 @@ export function decodeConfig(encoded: string): ConfigData | null {
       dbId: config.dbId,
       imageProp: config.imageProp,
       dateProp: config.dateProp,
+      colorProp: config.colorProp || 'Color',
       createdAt: new Date()
     };
   } catch (error) {

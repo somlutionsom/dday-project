@@ -42,7 +42,7 @@ export default function OnboardingPage() {
     try {
       console.log('DB Selected:', dbId);
       
-      await handleFinalSubmit(dbId, 'Image', 'Target Date');
+      await handleFinalSubmit(dbId, 'Image', 'Target Date', 'Color');
     } catch {
       setError('설정 실패');
     }
@@ -77,12 +77,13 @@ export default function OnboardingPage() {
     setLoading(false);
   };
 
-  const handleFinalSubmit = async (dbId?: string, imageCol?: string, dateCol?: string) => {
+  const handleFinalSubmit = async (dbId?: string, imageCol?: string, dateCol?: string, colorCol?: string) => {
     const finalDbId = dbId || '';
     const finalImageProp = imageCol || 'Image';
     const finalDateProp = dateCol || 'Target Date';
+    const finalColorProp = colorCol || 'Color';
     
-    console.log('Final submit with:', { finalDbId, finalImageProp, finalDateProp });
+    console.log('Final submit with:', { finalDbId, finalImageProp, finalDateProp, finalColorProp });
     
     setLoading(true);
     setError('');
@@ -94,7 +95,8 @@ export default function OnboardingPage() {
           token,
           dbId: finalDbId,
           imageProp: finalImageProp,
-          dateProp: finalDateProp
+          dateProp: finalDateProp,
+          colorProp: finalColorProp
         })
       });
       const data = await res.json();

@@ -4,7 +4,7 @@ import { encodeConfig } from '@/lib/store';
 
 export async function POST(request: NextRequest) {
   try {
-    const { token, dbId, imageProp, dateProp } = await request.json();
+    const { token, dbId, imageProp, dateProp, colorProp } = await request.json();
     
     const isValid = await validateToken(token);
     if (!isValid) {
@@ -17,6 +17,7 @@ export async function POST(request: NextRequest) {
       dbId,
       imageProp,
       dateProp,
+      colorProp: colorProp || 'Color',
       createdAt: new Date()
     });
     
