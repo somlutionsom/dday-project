@@ -147,39 +147,45 @@ export async function fetchDdayItem(cfg: string) {
       throw new Error('No items found in database');
     }
 
-    const page = response.results[0];
-    const properties = 'properties' in page ? page.properties : {};
+    const page = response.results[0] as Record<string, unknown>;
+    const properties = 'properties' in page && typeof page.properties === 'object' && page.properties !== null 
+      ? page.properties as Record<string, unknown>
+      : {};
 
-    // 이미지 속성 가져오기
+    // 이미지 속성 가져오기 - 안전한 타입 체크
     let image = null;
-    const imageProperty = properties[config.imageProp];
-    if (imageProperty && imageProperty.type === 'files' && imageProperty.files.length > 0) {
+    const imageProperty = properties[config.imageProp] as any;
+    if (imageProperty?.type === 'files' && Array.isArray(imageProperty.files) && imageProperty.files.length > 0) {
       const file = imageProperty.files[0];
-      if (file.type === 'file') {
+      if (file?.type === 'file' && file.file?.url) {
         image = file.file.url;
-      } else if (file.type === 'external') {
+      } else if (file?.type === 'external' && file.external?.url) {
         image = file.external.url;
       }
     }
 
-    // 날짜 속성 가져오기
+    // 날짜 속성 가져오기 - 안전한 타입 체크
     let targetDate = null;
-    const dateProperty = properties[config.dateProp];
-    if (dateProperty && dateProperty.type === 'date' && dateProperty.date) {
+    const dateProperty = properties[config.dateProp] as any;
+    if (dateProperty?.type === 'date' && dateProperty.date?.start) {
       targetDate = dateProperty.date.start;
     }
 
-    // 제목 가져오기
+    // 제목 가져오기 - 간단하게 처리
     let title = 'Untitled';
-    if ('properties' in page) {
-      const titleProperty = Object.values(page.properties).find((prop: unknown) => {
-        return typeof prop === 'object' && prop !== null && 'type' in prop && prop.type === 'title';
-      });
-      if (titleProperty && typeof titleProperty === 'object' && titleProperty !== null && 
-          'type' in titleProperty && titleProperty.type === 'title' && 
-          'title' in titleProperty && Array.isArray(titleProperty.title) && 
-          titleProperty.title.length > 0 && titleProperty.title[0].plain_text) {
-        title = titleProperty.title[0].plain_text;
+    if ('properties' in page && typeof page.properties === 'object' && page.properties !== null) {
+      const props = page.properties as Record<string, unknown>;
+      for (const prop of Object.values(props)) {
+        if (typeof prop === 'object' && prop !== null && 
+            'type' in prop && prop.type === 'title' &&
+            'title' in prop && Array.isArray(prop.title) && 
+            prop.title.length > 0) {
+          const titleItem = prop.title[0] as { plain_text?: string };
+          if (titleItem.plain_text) {
+            title = titleItem.plain_text;
+            break;
+          }
+        }
       }
     }
 
