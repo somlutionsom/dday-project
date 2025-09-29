@@ -138,13 +138,14 @@ export async function fetchDdayItem(cfg: string) {
         'Notion-Version': '2022-06-28'
       },
       body: JSON.stringify({
-        page_size: 1,
-        sorts: [{ property: 'last_edited_time', direction: 'descending' }]
+        page_size: 1
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Notion API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Notion API error: ${response.status}`, errorText);
+      throw new Error(`Notion API error: ${response.status} - ${errorText}`);
     }
 
     const data = await response.json();

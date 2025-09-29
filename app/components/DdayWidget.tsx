@@ -71,9 +71,10 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
       minHeight: '100vh',
       backgroundColor: '#000',
       color: '#fff',
-      fontFamily: 'monospace',
+      fontFamily: '"Courier New", "Pixelated", "monospace"',
       padding: '20px',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      imageRendering: 'pixelated'
     }}>
       {/* 이미지 */}
       {data.image && (
