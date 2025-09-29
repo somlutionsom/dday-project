@@ -127,8 +127,7 @@ export async function fetchDdayItem(cfg: string) {
     dateProp: '${config.dateProp}'
   }`);
 
-  const notion = new Client({ auth: config.token });
-
+  // NOTION CLIENT 완전 제거 - 직접 fetch만 사용
   try {
     // 직접 fetch를 사용한 Notion API 호출
     const response = await fetch(`https://api.notion.com/v1/databases/${config.dbId}/query`, {
