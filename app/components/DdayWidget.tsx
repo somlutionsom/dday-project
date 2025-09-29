@@ -28,19 +28,9 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
     const diffTime = target.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 0) return 'D-Day';
+    if (diffDays === 0) return 'D-DAY';
     if (diffDays > 0) return `D-${diffDays}`;
     return `D+${Math.abs(diffDays)}`;
-  };
-
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long'
-    });
   };
 
   if (!data || !data.targetDate) {
@@ -50,116 +40,146 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        fontFamily: 'monospace',
-        backgroundColor: '#000'
+        backgroundColor: 'transparent'
       }}>
-        <p style={{ color: '#666', fontSize: '14px' }}>데이터를 불러오는 중...</p>
+        <p style={{ color: '#999', fontSize: '14px' }}>데이터를 불러오는 중...</p>
       </div>
     );
   }
 
   const dday = calculateDday(data.targetDate);
-  const isToday = dday === 'D-Day';
+  const isToday = dday === 'D-DAY';
   const isPast = dday.startsWith('D+');
 
   return (
     <div style={{
       display: 'flex',
-      flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundColor: '#000',
-      color: '#fff',
-      fontFamily: '"Courier New", "Pixelated", "monospace"',
+      backgroundColor: 'transparent',
       padding: '20px',
-      boxSizing: 'border-box',
-      imageRendering: 'pixelated'
+      boxSizing: 'border-box'
     }}>
-      {/* 이미지 */}
-      {data.image && (
-        <div style={{
-          marginBottom: '30px',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 8px 32px rgba(255, 255, 255, 0.1)'
-        }}>
-          <Image 
-            src={data.image} 
-            alt={data.title}
-            width={300}
-            height={200}
-            style={{
-              maxWidth: '300px',
-              maxHeight: '200px',
-              objectFit: 'cover',
-              display: 'block'
-            }}
-          />
-        </div>
-      )}
-
-      {/* 제목 */}
-      <h1 style={{
-        fontSize: '24px',
-        fontWeight: 'normal',
-        margin: '0 0 20px 0',
-        textAlign: 'center',
-        color: '#fff',
-        letterSpacing: '1px'
-      }}>
-        {data.title}
-      </h1>
-
-      {/* D-Day */}
+      {/* 브라우저 창 스타일 위젯 */}
       <div style={{
-        fontSize: '48px',
-        fontWeight: 'bold',
-        margin: '20px 0',
-        color: isToday ? '#ff6b6b' : isPast ? '#95a5a6' : '#4ecdc4',
-        textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-        letterSpacing: '2px'
+        backgroundColor: '#FFFFFF',
+        borderRadius: '16px',
+        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
+        minWidth: '320px',
+        width: '400px',
+        aspectRatio: '4/3',
+        overflow: 'hidden',
+        position: 'relative'
       }}>
-        {dday}
+        {/* 헤더바 */}
+        <div style={{
+          backgroundColor: '#B3D9F2',
+          height: '32px',
+          borderRadius: '16px 16px 0 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingRight: '12px',
+          gap: '8px'
+        }}>
+          {/* 버튼들 */}
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#FFFFFF',
+            opacity: 0.8
+          }}></div>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#7FC4ED',
+            opacity: 0.9
+          }}></div>
+          <div style={{
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            backgroundColor: '#5BB4E8',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease-out'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.transform = 'scale(1.1)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+          ></div>
+        </div>
+
+        {/* 메인 컨텐츠 영역 */}
+        <div style={{
+          position: 'relative',
+          height: 'calc(100% - 32px)',
+          margin: '24px',
+          backgroundColor: data.image ? 'transparent' : '#C4C4C4',
+          borderRadius: '8px',
+          overflow: 'hidden'
+        }}>
+          {/* 이미지 또는 플레이스홀더 */}
+          {data.image ? (
+            <Image 
+              src={data.image} 
+              alt={data.title}
+              fill
+              style={{
+                objectFit: 'cover'
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100%',
+              height: '100%',
+              backgroundColor: '#C4C4C4',
+              opacity: 0.5
+            }}></div>
+          )}
+
+          {/* D-Day 배지 */}
+          <div style={{
+            position: 'absolute',
+            bottom: '16px',
+            right: '16px',
+            backgroundColor: isToday ? '#51CF66' : isPast ? '#FF6B6B' : '#5BB4E8',
+            color: '#FFFFFF',
+            padding: '8px 16px',
+            borderRadius: '12px',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            fontSize: '18px',
+            fontWeight: '600',
+            letterSpacing: '0.5px',
+            boxShadow: '0 2px 8px rgba(91, 180, 232, 0.25)',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease-out'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(91, 180, 232, 0.35)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(91, 180, 232, 0.25)';
+          }}
+          onClick={() => {
+            if (data.url) {
+              window.open(data.url, '_blank');
+            }
+          }}
+          >
+            {dday}
+          </div>
+        </div>
       </div>
-
-      {/* 날짜 */}
-      <p style={{
-        fontSize: '16px',
-        color: '#bbb',
-        margin: '10px 0',
-        letterSpacing: '0.5px'
-      }}>
-        {formatDate(data.targetDate)}
-      </p>
-
-      {/* 링크 */}
-      <a 
-        href={data.url} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        style={{
-          marginTop: '30px',
-          padding: '8px 16px',
-          backgroundColor: 'rgba(255, 255, 255, 0.1)',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          borderRadius: '20px',
-          color: '#fff',
-          textDecoration: 'none',
-          fontSize: '12px',
-          letterSpacing: '0.5px',
-          transition: 'all 0.3s ease',
-          backdropFilter: 'blur(10px)'
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-        }}
-      >
-        Notion에서 보기 →
-      </a>
     </div>
   );
 }

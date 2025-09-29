@@ -8,51 +8,45 @@ interface ConfigData {
   createdAt: Date;
 }
 
-// Vercel에서는 파일 시스템 대신 메모리 저장소 사용
-const configStore = new Map<string, ConfigData>();
-
 export function generateCfg(): string {
   return crypto.randomBytes(16).toString('hex');
 }
 
-export function saveConfig(cfg: string, data: ConfigData): void {
-  console.log(`Saving config for cfg: ${cfg}`, data);
-  
-  try {
-    configStore.set(cfg, data);
-    console.log(`Config saved to memory store. Store size: ${configStore.size}`);
-  } catch (error) {
-    console.error('Error saving config:', error);
-    throw new Error('Failed to save config');
-  }
+// Vercel 서버리스 환경에서는 URL 기반 인코딩 사용
+export function encodeConfig(data: ConfigData): string {
+  const configString = JSON.stringify({
+    token: data.token,
+    dbId: data.dbId,
+    imageProp: data.imageProp,
+    dateProp: data.dateProp
+  });
+  return Buffer.from(configString).toString('base64url');
 }
 
-export function getConfig(cfg: string): ConfigData | null {
-  console.log(`Getting config for cfg: ${cfg}`);
-  
+export function decodeConfig(encoded: string): ConfigData | null {
   try {
-    const config = configStore.get(cfg);
+    const configString = Buffer.from(encoded, 'base64url').toString();
+    const config = JSON.parse(configString);
     
-    if (!config) {
-      console.log(`Config not found in memory store`);
-      return null;
-    }
-    
-    console.log(`Config loaded from memory store`);
-    return config;
+    return {
+      token: config.token,
+      dbId: config.dbId,
+      imageProp: config.imageProp,
+      dateProp: config.dateProp,
+      createdAt: new Date()
+    };
   } catch (error) {
-    console.error('Error loading config:', error);
+    console.error('Error decoding config:', error);
     return null;
   }
 }
 
-export function deleteConfig(cfg: string): boolean {
-  try {
-    const deleted = configStore.delete(cfg);
-    console.log(`Config deleted from memory store: ${deleted}`);
-    return deleted;
-  } catch (error) {
-    console.error('Error deleting config:', error);
-    return false;
-  }
+export function saveConfig(cfg: string, data: ConfigData): void {
+  // URL 기반이므로 실제 저장은 불필요
+  console.log(`Config prepared for URL encoding`);
+}
+
+export function getConfig(cfg: string): ConfigData | null {
+  console.log(`Decoding config from: ${cfg}`);
+  return decodeConfig(cfg);
 }

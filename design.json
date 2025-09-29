@@ -1,0 +1,208 @@
+{
+    "designSystem": {
+      "globalSettings": {
+        "backgroundTreatment": "transparent",
+        "borderRadius": {
+          "container": "16px",
+          "headerBar": "16px 16px 0 0",
+          "imageArea": "8px",
+          "ddayBadge": "12px"
+        },
+        "spacing": {
+          "containerPadding": "0",
+          "contentMargin": "24px",
+          "badgeOffset": "16px"
+        }
+      },
+      "componentStyles": {
+        "widgetContainer": {
+          "surfaceColor": "#FFFFFF",
+          "borderTreatment": "none",
+          "elevationShadow": "0 4px 16px rgba(0, 0, 0, 0.06)",
+          "dimensions": {
+            "width": "auto",
+            "minWidth": "320px",
+            "aspectRatio": "4:3"
+          }
+        },
+        "headerBar": {
+          "surfaceColor": "#B3D9F2",
+          "height": "32px",
+          "borderTreatment": "none",
+          "controlElements": {
+            "position": "right",
+            "spacing": "8px",
+            "controls": [
+              {
+                "type": "minimize",
+                "shape": "circle",
+                "size": "12px",
+                "color": "#FFFFFF",
+                "opacity": 0.8
+              },
+              {
+                "type": "maximize",
+                "shape": "circle",
+                "size": "12px",
+                "color": "#7FC4ED",
+                "opacity": 0.9
+              },
+              {
+                "type": "refresh",
+                "shape": "circle",
+                "size": "12px",
+                "color": "#5BB4E8",
+                "interactionStates": {
+                  "hover": {
+                    "opacity": 1,
+                    "transform": "scale(1.1)"
+                  },
+                  "active": {
+                    "transform": "scale(0.95)"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "imageContainer": {
+          "surfaceColor": "#C4C4C4",
+          "borderTreatment": "none",
+          "dimensions": {
+            "width": "calc(100% - 48px)",
+            "height": "auto",
+            "aspectRatio": "16:10",
+            "margin": "24px"
+          },
+          "placeholderState": {
+            "backgroundColor": "#C4C4C4",
+            "opacity": 0.5
+          },
+          "loadedState": {
+            "objectFit": "cover",
+            "backgroundColor": "transparent"
+          }
+        },
+        "ddayBadge": {
+          "position": "absolute",
+          "placement": {
+            "bottom": "16px",
+            "right": "16px"
+          },
+          "surfaceColor": "#5BB4E8",
+          "textColor": "#FFFFFF",
+          "padding": "8px 16px",
+          "typography": {
+            "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "600",
+            "letterSpacing": "0.5px"
+          },
+          "elevationShadow": "0 2px 8px rgba(91, 180, 232, 0.25)",
+          "interactionStates": {
+            "hover": {
+              "surfaceColor": "#4AA6DB",
+              "transform": "translateY(-2px)",
+              "elevationShadow": "0 4px 12px rgba(91, 180, 232, 0.35)"
+            }
+          },
+          "variants": {
+            "dday": {
+              "prefix": "D-",
+              "surfaceColor": "#5BB4E8"
+            },
+            "pastDue": {
+              "prefix": "D+",
+              "surfaceColor": "#FF6B6B"
+            },
+            "today": {
+              "text": "D-DAY",
+              "surfaceColor": "#51CF66"
+            }
+          }
+        }
+      },
+      "colorPalette": {
+        "primary": {
+          "blue": {
+            "100": "#E6F3FA",
+            "200": "#B3D9F2",
+            "300": "#7FC4ED",
+            "400": "#5BB4E8",
+            "500": "#4AA6DB",
+            "600": "#3A96CB"
+          },
+          "neutral": {
+            "100": "#F5F5F5",
+            "200": "#E0E0E0",
+            "300": "#C4C4C4",
+            "400": "#9E9E9E",
+            "white": "#FFFFFF",
+            "transparent": "transparent"
+          },
+          "semantic": {
+            "success": "#51CF66",
+            "error": "#FF6B6B",
+            "warning": "#FFD43B"
+          }
+        }
+      },
+      "animations": {
+        "transitions": {
+          "default": "all 0.2s ease-in-out",
+          "hover": "all 0.15s ease-out",
+          "shadow": "box-shadow 0.3s ease-in-out"
+        },
+        "refreshAnimation": {
+          "type": "rotation",
+          "duration": "0.6s",
+          "easing": "cubic-bezier(0.4, 0, 0.2, 1)"
+        }
+      },
+      "responsiveBehavior": {
+        "breakpoints": {
+          "mobile": {
+            "maxWidth": "480px",
+            "adjustments": {
+              "containerPadding": "16px",
+              "ddayBadgeFontSize": "16px"
+            }
+          },
+          "tablet": {
+            "maxWidth": "768px",
+            "adjustments": {
+              "containerPadding": "20px"
+            }
+          }
+        },
+        "scalingBehavior": "fluid",
+        "maintainAspectRatio": true
+      },
+      "implementationNotes": {
+        "criticalRequirements": [
+          "Background must be transparent for Notion embedding",
+          "Widget should respect parent iframe dimensions",
+          "Refresh button must trigger Notion API data fetch",
+          "Image loading states must handle API delays gracefully"
+        ],
+        "avoidCommonErrors": [
+          "Do not apply blue header color to image container",
+          "Do not use fixed pixel dimensions for responsive layout",
+          "Ensure D-day badge remains visible over any image",
+          "Maintain contrast ratio for badge text visibility"
+        ],
+        "notionIntegration": {
+          "imageProperty": {
+            "fallbackColor": "#C4C4C4",
+            "loadingIndicator": "optional",
+            "errorState": "show placeholder"
+          },
+          "dateCalculation": {
+            "format": "D-{number}",
+            "updateFrequency": "daily at midnight",
+            "timezone": "user local"
+          }
+        }
+      }
+    }
+  }

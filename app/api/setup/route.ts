@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateToken } from '@/lib/notion';
-import { generateCfg, saveConfig } from '@/lib/store';
+import { encodeConfig } from '@/lib/store';
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,8 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'Invalid token' }, { status: 401 });
     }
     
-    const cfg = generateCfg();
-    saveConfig(cfg, {
+    const cfg = encodeConfig({
       token,
       dbId,
       imageProp,
