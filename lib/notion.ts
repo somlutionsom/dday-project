@@ -37,12 +37,14 @@ export async function listDatabases(token: string) {
             
             try {
               const db = await notion.databases.retrieve({ database_id: dbId });
+              const dbTitle = 'title' in db && Array.isArray(db.title) && db.title.length > 0
+                ? (db.title[0].type === 'text' ? db.title[0].text.content : db.id)
+                : db.id;
+              
               databases.push({
                 id: db.id,
-                title: db.title.length > 0 
-                  ? (db.title[0].type === 'text' ? db.title[0].text.content : db.id)
-                  : db.id,
-                icon: db.icon?.type === 'emoji' ? db.icon.emoji : null
+                title: dbTitle,
+                icon: 'icon' in db && db.icon?.type === 'emoji' ? db.icon.emoji : null
               });
             } catch {
               continue;
@@ -93,12 +95,14 @@ export async function getDatabaseFromUrl(token: string, url: string) {
     
     const db = await notion.databases.retrieve({ database_id: dbId });
     
+    const dbTitle = 'title' in db && Array.isArray(db.title) && db.title.length > 0
+      ? (db.title[0].type === 'text' ? db.title[0].text.content : db.id)
+      : db.id;
+    
     return {
       id: db.id,
-      title: db.title.length > 0 
-        ? (db.title[0].type === 'text' ? db.title[0].text.content : db.id)
-        : db.id,
-      icon: db.icon?.type === 'emoji' ? db.icon.emoji : null
+      title: dbTitle,
+      icon: 'icon' in db && db.icon?.type === 'emoji' ? db.icon.emoji : null
     };
   } catch (error) {
     console.error('Error getting database from URL:', error);
