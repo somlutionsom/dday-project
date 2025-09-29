@@ -18,6 +18,7 @@ interface DdayWidgetProps {
 
 export default function DdayWidget({ initialData }: DdayWidgetProps) {
   const [data] = useState<DdayData | null>(initialData);
+  const [isRotating, setIsRotating] = useState(false);
 
   const calculateDday = (targetDate: string): string => {
     const target = new Date(targetDate);
@@ -36,13 +37,32 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
   if (!data || !data.targetDate) {
     return (
       <div style={{
+        background: 'transparent',
+        fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif",
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh',
-        backgroundColor: 'transparent'
+        minHeight: '100vh',
+        padding: '20px'
       }}>
-        <p style={{ color: '#999', fontSize: '14px' }}>데이터를 불러오는 중...</p>
+        <div style={{
+          width: '400px',
+          background: '#FFFFFF',
+          borderRadius: '20px',
+          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+          padding: '20px',
+          textAlign: 'center' as const
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '215px',
+            color: '#9E9E9E'
+          }}>
+            이미지 로딩 중...
+          </div>
+        </div>
       </div>
     );
   }
@@ -51,132 +71,204 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
   const isToday = dday === 'D-DAY';
   const isPast = dday.startsWith('D+');
 
+  const handleRefresh = () => {
+    setIsRotating(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 300);
+    setTimeout(() => {
+      setIsRotating(false);
+    }, 600);
+  };
+
   return (
     <div style={{
+      background: 'transparent',
+      fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif",
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundColor: 'transparent',
       padding: '20px',
       boxSizing: 'border-box'
     }}>
-      {/* 브라우저 창 스타일 위젯 */}
       <div style={{
-        backgroundColor: '#FFFFFF',
-        borderRadius: '16px',
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)',
-        minWidth: '320px',
         width: '400px',
-        aspectRatio: '4/3',
-        overflow: 'hidden',
-        position: 'relative'
+        background: '#FFFFFF',
+        borderRadius: '20px',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+        position: 'relative',
+        overflow: 'visible'
       }}>
         {/* 헤더바 */}
         <div style={{
-          backgroundColor: '#B3D9F2',
-          height: '32px',
-          borderRadius: '16px 16px 0 0',
+          background: '#B3D9F2',
+          height: '71px',
+          borderRadius: '20px 20px 0 0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-end',
-          paddingRight: '12px',
-          gap: '8px'
+          padding: '11px 23px',
+          gap: '10px'
         }}>
-          {/* 버튼들 */}
           <div style={{
-            width: '12px',
-            height: '12px',
+            width: '17px',
+            height: '17px',
             borderRadius: '50%',
-            backgroundColor: '#FFFFFF',
-            opacity: 0.8
-          }}></div>
-          <div style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: '#7FC4ED',
-            opacity: 0.9
-          }}></div>
-          <div style={{
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            backgroundColor: '#5BB4E8',
-            cursor: 'pointer',
+            background: '#FFFFFF',
+            opacity: 0.9,
             transition: 'all 0.15s ease-out'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.opacity = '1';
-            e.currentTarget.style.transform = 'scale(1.1)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.opacity = '1';
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
+          }}></div>
+          <div style={{
+            width: '17px',
+            height: '17px',
+            borderRadius: '50%',
+            background: '#7FC4ED',
+            transition: 'all 0.15s ease-out'
+          }}></div>
+          <div 
+            style={{
+              width: '17px',
+              height: '17px',
+              borderRadius: '50%',
+              background: '#5BB4E8',
+              cursor: 'pointer',
+              position: 'relative',
+              transition: isRotating ? 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)' : 'all 0.15s ease-out',
+              transform: isRotating ? 'rotate(360deg)' : 'rotate(0deg)',
+              transformOrigin: 'center'
+            }}
+            onMouseOver={(e) => {
+              if (!isRotating) {
+                e.currentTarget.style.transform = 'scale(1.15)';
+                e.currentTarget.style.filter = 'brightness(1.1)';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!isRotating) {
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.filter = 'brightness(1)';
+              }
+            }}
+            onMouseDown={(e) => {
+              if (!isRotating) {
+                e.currentTarget.style.transform = 'scale(0.95)';
+              }
+            }}
+            onMouseUp={(e) => {
+              if (!isRotating) {
+                e.currentTarget.style.transform = 'scale(1.15)';
+              }
+            }}
+            onClick={handleRefresh}
           ></div>
         </div>
-
-        {/* 메인 컨텐츠 영역 */}
+        
+        {/* 컨텐츠 영역 */}
         <div style={{
-          position: 'relative',
-          height: 'calc(100% - 32px)',
-          margin: '24px',
-          backgroundColor: data.image ? 'transparent' : '#C4C4C4',
-          borderRadius: '8px',
-          overflow: 'hidden'
+          padding: '20px',
+          position: 'relative'
         }}>
-          {/* 이미지 또는 플레이스홀더 */}
-          {data.image ? (
-            <Image 
-              src={data.image} 
-              alt={data.title}
-              fill
-              style={{
-                objectFit: 'cover'
-              }}
-            />
-          ) : (
+          {/* 이미지 컨테이너 */}
+          <div style={{
+            width: '100%',
+            height: '215px',
+            background: '#C4C4C4',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            {data.image ? (
+              <Image 
+                src={data.image} 
+                alt={data.title}
+                fill
+                style={{
+                  objectFit: 'cover'
+                }}
+              />
+            ) : (
+              <div style={{
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color: '#9E9E9E',
+                fontSize: '14px'
+              }}>
+                이미지 로딩 중...
+              </div>
+            )}
+          </div>
+          
+          {/* D-Day 래퍼 (3D 그림자 효과) */}
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: '17px',
+              right: '-59px',
+              zIndex: 10
+            }}
+            onMouseOver={(e) => {
+              const badge = e.currentTarget.querySelector('[data-badge="true"]') as HTMLElement;
+              if (badge) {
+                badge.style.transform = 'translateY(-2px)';
+              }
+            }}
+            onMouseOut={(e) => {
+              const badge = e.currentTarget.querySelector('[data-badge="true"]') as HTMLElement;
+              if (badge) {
+                badge.style.transform = 'translateY(0)';
+              }
+            }}
+          >
+            {/* 그림자 */}
             <div style={{
+              position: 'absolute',
+              top: '4px',
+              left: '3px',
+              background: isToday ? '#C8F0C6' : isPast ? '#FFD6DA' : '#CADDEE',
+              borderRadius: '16px',
               width: '100%',
               height: '100%',
-              backgroundColor: '#C4C4C4',
-              opacity: 0.5
+              zIndex: 1
             }}></div>
-          )}
-
-          {/* D-Day 배지 */}
-          <div style={{
-            position: 'absolute',
-            bottom: '16px',
-            right: '16px',
-            backgroundColor: isToday ? '#51CF66' : isPast ? '#FF6B6B' : '#5BB4E8',
-            color: '#FFFFFF',
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-            fontSize: '18px',
-            fontWeight: '600',
-            letterSpacing: '0.5px',
-            boxShadow: '0 2px 8px rgba(91, 180, 232, 0.25)',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease-out'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 4px 12px rgba(91, 180, 232, 0.35)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(91, 180, 232, 0.25)';
-          }}
-          onClick={() => {
-            if (data.url) {
-              window.open(data.url, '_blank');
-            }
-          }}
-          >
-            {dday}
+            
+            {/* 메인 배지 */}
+            <div 
+              data-badge="true"
+              style={{
+                position: 'relative',
+                background: isToday ? '#A8E6A3' : isPast ? '#FFB3BA' : '#9CD5FE',
+                border: '1px solid #FFFFFF',
+                borderRadius: '16px',
+                padding: '12px 24px',
+                minWidth: '98px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 2,
+                transition: 'transform 0.2s ease',
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                if (data.url) {
+                  window.open(data.url, '_blank');
+                }
+              }}
+            >
+              <span style={{
+                color: '#FFFFFF',
+                fontSize: '32px',
+                fontWeight: '900',
+                letterSpacing: '-0.5px',
+                lineHeight: 1,
+                whiteSpace: 'nowrap'
+              }}>
+                {dday}
+              </span>
+            </div>
           </div>
         </div>
       </div>

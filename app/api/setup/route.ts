@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, error: 'Invalid token' }, { status: 401 });
     }
     
+    // URL에서 문제되는 문자 방지를 위해 Base64URL 인코딩 사용
     const cfg = encodeConfig({
       token,
       dbId,
