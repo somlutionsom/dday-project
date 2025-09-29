@@ -78,7 +78,7 @@ export default function OnboardingPage() {
   };
 
   const handleFinalSubmit = async (dbId?: string, imageCol?: string, dateCol?: string) => {
-    const finalDbId = dbId || selectedDb;
+    const finalDbId = dbId || '';
     const finalImageProp = imageCol || 'Image';
     const finalDateProp = dateCol || 'Target Date';
     
