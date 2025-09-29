@@ -4,6 +4,7 @@ import { getConfig } from './store';
 export async function validateToken(token: string): Promise<boolean> {
   try {
     // 단순히 토큰 형식만 검증 (실제 API 호출 없이)
+    // Vercel 배포 강제 트리거를 위한 더미 변경
     if (!token || !token.startsWith('ntn_') || token.length < 50) {
       return false;
     }
