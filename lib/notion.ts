@@ -129,26 +129,31 @@ export async function fetchDdayItem(cfg: string) {
   const notion = new Client({ auth: config.token });
 
   try {
-    // Notion API의 올바른 데이터베이스 쿼리 방식
-    const response = await (notion as unknown as {
-      databases: {
-        query: (params: {
-          database_id: string;
-          page_size: number;
-          sorts: Array<{ property: string; direction: string }>;
-        }) => Promise<{ results: Array<unknown> }>;
-      };
-    }).databases.query({
-      database_id: config.dbId,
-      page_size: 1,
-      sorts: [{ property: 'last_edited_time', direction: 'descending' }]
+    // 직접 fetch를 사용한 Notion API 호출
+    const response = await fetch(`https://api.notion.com/v1/databases/${config.dbId}/query`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${config.token}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify({
+        page_size: 1,
+        sorts: [{ property: 'last_edited_time', direction: 'descending' }]
+      })
     });
 
-    if (response.results.length === 0) {
+    if (!response.ok) {
+      throw new Error(`Notion API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
       throw new Error('No items found in database');
     }
 
-    const page = response.results[0] as Record<string, unknown>;
+    const page = data.results[0] as Record<string, unknown>;
     const properties = 'properties' in page && typeof page.properties === 'object' && page.properties !== null 
       ? page.properties as Record<string, unknown>
       : {};
