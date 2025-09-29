@@ -46,19 +46,20 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
         padding: '20px'
       }}>
         <div style={{
-          width: '400px',
+          width: '200px',
           background: '#FFFFFF',
-          borderRadius: '20px',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
-          padding: '20px',
+          borderRadius: '10px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
+          padding: '10px',
           textAlign: 'center' as const
         }}>
           <div style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '215px',
-            color: '#9E9E9E'
+            height: '107.5px',
+            color: '#9E9E9E',
+            fontSize: '7px'
           }}>
             이미지 로딩 중...
           </div>
@@ -93,43 +94,43 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
       boxSizing: 'border-box'
     }}>
       <div style={{
-        width: '400px',
+        width: '200px',
         background: '#FFFFFF',
-        borderRadius: '20px',
-        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.08)',
+        borderRadius: '10px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.08)',
         position: 'relative',
         overflow: 'visible'
       }}>
         {/* 헤더바 */}
         <div style={{
           background: '#B3D9F2',
-          height: '71px',
-          borderRadius: '20px 20px 0 0',
+          height: '35.5px',
+          borderRadius: '10px 10px 0 0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'flex-end',
-          padding: '11px 23px',
-          gap: '10px'
+          padding: '5.5px 11.5px',
+          gap: '5px'
         }}>
           <div style={{
-            width: '17px',
-            height: '17px',
+            width: '8.5px',
+            height: '8.5px',
             borderRadius: '50%',
             background: '#FFFFFF',
             opacity: 0.9,
             transition: 'all 0.15s ease-out'
           }}></div>
           <div style={{
-            width: '17px',
-            height: '17px',
+            width: '8.5px',
+            height: '8.5px',
             borderRadius: '50%',
             background: '#7FC4ED',
             transition: 'all 0.15s ease-out'
           }}></div>
           <div 
             style={{
-              width: '17px',
-              height: '17px',
+              width: '8.5px',
+              height: '8.5px',
               borderRadius: '50%',
               background: '#5BB4E8',
               cursor: 'pointer',
@@ -166,15 +167,15 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
         
         {/* 컨텐츠 영역 */}
         <div style={{
-          padding: '20px',
+          padding: '10px',
           position: 'relative'
         }}>
           {/* 이미지 컨테이너 */}
           <div style={{
             width: '100%',
-            height: '215px',
+            height: '107.5px',
             background: '#C4C4C4',
-            borderRadius: '12px',
+            borderRadius: '6px',
             overflow: 'hidden',
             position: 'relative'
           }}>
@@ -206,14 +207,14 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
           <div 
             style={{
               position: 'absolute',
-              bottom: '17px',
-              right: '-59px',
+              bottom: '16.5px',
+              right: '-30.5px',
               zIndex: 10
             }}
             onMouseOver={(e) => {
               const badge = e.currentTarget.querySelector('[data-badge="true"]') as HTMLElement;
               if (badge) {
-                badge.style.transform = 'translateY(-2px)';
+                badge.style.transform = 'translateY(-1px)';
               }
             }}
             onMouseOut={(e) => {
@@ -226,10 +227,10 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
             {/* 그림자 */}
             <div style={{
               position: 'absolute',
-              top: '4px',
-              left: '3px',
+              top: '2px',
+              left: '1.5px',
               background: isToday ? '#C8F0C6' : isPast ? '#FFD6DA' : '#CADDEE',
-              borderRadius: '16px',
+              borderRadius: '8px',
               width: '100%',
               height: '100%',
               zIndex: 1
@@ -241,10 +242,10 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
               style={{
                 position: 'relative',
                 background: isToday ? '#A8E6A3' : isPast ? '#FFB3BA' : '#9CD5FE',
-                border: '1px solid #FFFFFF',
-                borderRadius: '16px',
-                padding: '12px 24px',
-                minWidth: '98px',
+                border: '0.5px solid #FFFFFF',
+                borderRadius: '9.68px',
+                padding: '7.26px 14.52px',
+                minWidth: '59.29px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -260,9 +261,9 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
             >
               <span style={{
                 color: '#FFFFFF',
-                fontSize: '32px',
+                fontSize: '19.36px',
                 fontWeight: '900',
-                letterSpacing: '-0.5px',
+                letterSpacing: '-0.3025px',
                 lineHeight: 1,
                 whiteSpace: 'nowrap'
               }}>
