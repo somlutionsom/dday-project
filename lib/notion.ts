@@ -154,21 +154,36 @@ export async function fetchDdayItem(cfg: string) {
 
     // 이미지 속성 가져오기 - 안전한 타입 체크
     let image = null;
-    const imageProperty = properties[config.imageProp] as any;
-    if (imageProperty?.type === 'files' && Array.isArray(imageProperty.files) && imageProperty.files.length > 0) {
-      const file = imageProperty.files[0];
-      if (file?.type === 'file' && file.file?.url) {
-        image = file.file.url;
-      } else if (file?.type === 'external' && file.external?.url) {
-        image = file.external.url;
+    const imageProperty = properties[config.imageProp] as unknown;
+    if (typeof imageProperty === 'object' && imageProperty !== null) {
+      const prop = imageProperty as Record<string, unknown>;
+      if (prop.type === 'files' && Array.isArray(prop.files) && prop.files.length > 0) {
+        const file = prop.files[0] as Record<string, unknown>;
+        if (file?.type === 'file' && typeof file.file === 'object' && file.file !== null) {
+          const fileObj = file.file as Record<string, unknown>;
+          if (typeof fileObj.url === 'string') {
+            image = fileObj.url;
+          }
+        } else if (file?.type === 'external' && typeof file.external === 'object' && file.external !== null) {
+          const externalObj = file.external as Record<string, unknown>;
+          if (typeof externalObj.url === 'string') {
+            image = externalObj.url;
+          }
+        }
       }
     }
 
     // 날짜 속성 가져오기 - 안전한 타입 체크
     let targetDate = null;
-    const dateProperty = properties[config.dateProp] as any;
-    if (dateProperty?.type === 'date' && dateProperty.date?.start) {
-      targetDate = dateProperty.date.start;
+    const dateProperty = properties[config.dateProp] as unknown;
+    if (typeof dateProperty === 'object' && dateProperty !== null) {
+      const prop = dateProperty as Record<string, unknown>;
+      if (prop.type === 'date' && typeof prop.date === 'object' && prop.date !== null) {
+        const dateObj = prop.date as Record<string, unknown>;
+        if (typeof dateObj.start === 'string') {
+          targetDate = dateObj.start;
+        }
+      }
     }
 
     // 제목 가져오기 - 간단하게 처리
