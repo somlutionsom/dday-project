@@ -208,8 +208,8 @@ export async function fetchDdayItem(cfg: string) {
       title,
       image,
       targetDate,
-      pageId: page.id,
-      url: page.url
+      pageId: String(page.id || ''),
+      url: String(page.url || '')
     };
   } catch (error) {
     console.error('Error fetching D-Day item:', error);
