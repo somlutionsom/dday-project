@@ -36,12 +36,12 @@ const THEME_COLORS = {
     shadow: '#FFD6E2'
   },
   red: {
-    header: '#FFE5E5',
-    button1: '#FFFFFF',
+    header: '#D91A2A',
+    button1: '#F2F2F2',
     button2: '#FF4C4C',
-    button3: '#FFB3B3',
-    badge: '#FF4C4C',
-    shadow: '#FFB3B3'
+    button3: '#F28585',
+    badge: '#D91A2A',
+    shadow: '#590716'
   },
   black: {
     header: '#E6E6E6',
@@ -275,7 +275,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
           <div 
             style={{
               position: 'absolute',
-              bottom: '16.5px',
+              bottom: '21.5px',
               right: '-30.5px',
               zIndex: 10
             }}
@@ -312,7 +312,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
                 background: colors.badge,
                 border: '0.5px solid #FFFFFF',
                 borderRadius: '9.68px',
-                padding: '7.26px 14.52px',
+                padding: '10.26px 10.52px',
                 minWidth: '59.29px',
                 display: 'flex',
                 alignItems: 'center',
@@ -329,7 +329,7 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
             >
               <span style={{
                 color: '#FFFFFF',
-                fontSize: '19.36px',
+                fontSize: '21px',
                 fontWeight: '900',
                 letterSpacing: '-0.3025px',
                 lineHeight: 1,
