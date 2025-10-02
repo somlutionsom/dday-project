@@ -15,54 +15,66 @@ export async function validateToken(token: string): Promise<boolean> {
 }
 
 export async function listDatabases(token: string) {
-  const notion = new Client({ auth: token });
-  
   try {
-    const response = await notion.search({
-      filter: { property: 'object', value: 'page' },
-      page_size: 100
+    // 직접 fetch로 search API 호출 - filter 없이 모든 객체 검색
+    const response = await fetch('https://api.notion.com/v1/search', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Notion-Version': '2022-06-28'
+      },
+      body: JSON.stringify({
+        filter: {
+          value: 'database',
+          property: 'object'
+        },
+        page_size: 100
+      })
     });
 
-    const databases = [];
-    const processedDbIds = new Set();
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Notion API error: ${response.status}`, errorText);
+      return [];
+    }
 
-    for (const page of response.results) {
-      if (page.object === 'page') {
+    const data = await response.json();
+    
+    if (!data.results || data.results.length === 0) {
+      console.log('No databases found. User should input database URL directly.');
+      return [];
+    }
+
+    const databases = [];
+
+    for (const item of data.results) {
+      if (item.object === 'database') {
         try {
-          const pageDetails = await notion.pages.retrieve({ page_id: page.id });
+          const dbTitle = item.title && Array.isArray(item.title) && item.title.length > 0
+            ? (item.title[0].type === 'text' ? item.title[0].text.content : item.id)
+            : item.id;
           
-          if ('parent' in pageDetails && pageDetails.parent.type === 'database_id') {
-            const dbId = pageDetails.parent.database_id;
-            
-            if (processedDbIds.has(dbId)) continue;
-            processedDbIds.add(dbId);
-            
-            try {
-              const db = await notion.databases.retrieve({ database_id: dbId });
-              const dbTitle = 'title' in db && Array.isArray(db.title) && db.title.length > 0
-                ? (db.title[0].type === 'text' ? db.title[0].text.content : db.id)
-                : db.id;
-              
-              databases.push({
-                id: db.id,
-                title: dbTitle,
-                icon: 'icon' in db && db.icon?.type === 'emoji' ? db.icon.emoji : null
-              });
-            } catch {
-              continue;
+          let icon = null;
+          if (item.icon) {
+            if (item.icon.type === 'emoji') {
+              icon = item.icon.emoji;
             }
           }
-        } catch {
+          
+          databases.push({
+            id: item.id,
+            title: dbTitle,
+            icon: icon
+          });
+        } catch (err) {
+          console.error('Error processing database:', err);
           continue;
         }
       }
     }
 
     console.log(`Found ${databases.length} databases`);
-    
-    if (databases.length === 0) {
-      console.log('No databases found. User should input database URL directly.');
-    }
     
     return databases;
   } catch (error) {
@@ -149,19 +161,29 @@ export async function fetchDdayItem(cfg: string) {
     }
 
     const data = await response.json();
+    console.log('Notion API response:', JSON.stringify(data, null, 2));
 
     if (!data.results || data.results.length === 0) {
+      console.error('No items found in database');
       throw new Error('No items found in database');
     }
+
+    console.log('Found', data.results.length, 'items in database');
 
     const page = data.results[0] as Record<string, unknown>;
     const properties = 'properties' in page && typeof page.properties === 'object' && page.properties !== null 
       ? page.properties as Record<string, unknown>
       : {};
 
+    console.log('Available properties:', Object.keys(properties));
+    console.log('Looking for image property:', config.imageProp);
+    console.log('Looking for date property:', config.dateProp);
+    console.log('Looking for color property:', config.colorProp);
+
     // 이미지 속성 가져오기 - 안전한 타입 체크
     let image = null;
     const imageProperty = properties[config.imageProp] as unknown;
+    console.log('Image property:', JSON.stringify(imageProperty, null, 2));
     if (typeof imageProperty === 'object' && imageProperty !== null) {
       const prop = imageProperty as Record<string, unknown>;
       if (prop.type === 'files' && Array.isArray(prop.files) && prop.files.length > 0) {
@@ -180,9 +202,12 @@ export async function fetchDdayItem(cfg: string) {
       }
     }
 
+    console.log('Final image value:', image);
+
     // 날짜 속성 가져오기 - 안전한 타입 체크
     let targetDate = null;
     const dateProperty = properties[config.dateProp] as unknown;
+    console.log('Date property:', JSON.stringify(dateProperty, null, 2));
     if (typeof dateProperty === 'object' && dateProperty !== null) {
       const prop = dateProperty as Record<string, unknown>;
       if (prop.type === 'date' && typeof prop.date === 'object' && prop.date !== null) {
@@ -193,9 +218,12 @@ export async function fetchDdayItem(cfg: string) {
       }
     }
 
+    console.log('Final targetDate value:', targetDate);
+
     // 색상 테마 가져오기 - Color 컬럼에서
     let colorTheme = 'blue';
     const colorProperty = properties[config.colorProp] as unknown;
+    console.log('Color property:', JSON.stringify(colorProperty, null, 2));
     if (typeof colorProperty === 'object' && colorProperty !== null) {
       const prop = colorProperty as Record<string, unknown>;
       if (prop.type === 'select' && typeof prop.select === 'object' && prop.select !== null) {
@@ -238,7 +266,9 @@ export async function fetchDdayItem(cfg: string) {
       }
     }
 
-    return {
+    console.log('Final colorTheme value:', colorTheme);
+
+    const result = {
       title,
       image,
       targetDate,
@@ -246,6 +276,10 @@ export async function fetchDdayItem(cfg: string) {
       pageId: String(page.id || ''),
       url: String(page.url || '')
     };
+
+    console.log('Returning D-Day item:', result);
+
+    return result;
   } catch (error) {
     console.error('Error fetching D-Day item:', error);
     throw error;

@@ -3,18 +3,25 @@ import { getDatabaseFromUrl } from '@/lib/notion';
 
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json();
-    const authHeader = request.headers.get('Authorization');
+    const authHeader = request.headers.get('authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return NextResponse.json({ error: 'Missing token' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const token = authHeader.slice(7);
-
+    
+    const token = authHeader.replace('Bearer ', '');
+    const { url } = await request.json();
+    
+    if (!url) {
+      return NextResponse.json({ error: 'Database URL is required' }, { status: 400 });
+    }
+    
     const database = await getDatabaseFromUrl(token, url);
+    
     return NextResponse.json(database);
-  } catch (error: unknown) {
-    console.error('Database from URL error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch database from URL';
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } catch (error) {
+    console.error('Error getting database from URL:', error);
+    return NextResponse.json({ 
+      error: 'Failed to access database. Please check the URL and ensure the API has access to this database.' 
+    }, { status: 500 });
   }
 }
