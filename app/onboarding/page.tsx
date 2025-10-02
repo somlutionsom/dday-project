@@ -154,11 +154,11 @@ export default function OnboardingPage() {
                     https://www.notion.so/my-integrations
                   </a> 접속
                 </li>
-                <li style={{ marginBottom: '5px' }}><strong>"New integration"</strong> 버튼 클릭</li>
-                <li style={{ marginBottom: '5px' }}>원하는 이름 입력 (예: "D-Day Widget")</li>
+                <li style={{ marginBottom: '5px' }}><strong>&quot;New integration&quot;</strong> 버튼 클릭</li>
+                <li style={{ marginBottom: '5px' }}>원하는 이름 입력 (예: &quot;D-Day Widget&quot;)</li>
                 <li style={{ marginBottom: '5px' }}>사용할 워크스페이스 선택</li>
-                <li style={{ marginBottom: '5px' }}><strong>"Submit"</strong> 버튼 클릭</li>
-                <li style={{ marginBottom: '5px' }}><strong>"Internal Integration Token"</strong> 복사 (ntn_으로 시작)</li>
+                <li style={{ marginBottom: '5px' }}><strong>&quot;Submit&quot;</strong> 버튼 클릭</li>
+                <li style={{ marginBottom: '5px' }}><strong>&quot;Internal Integration Token&quot;</strong> 복사 (ntn_으로 시작)</li>
               </ol>
 
               <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginTop: '15px', marginBottom: '8px' }}>
@@ -166,9 +166,9 @@ export default function OnboardingPage() {
               </h3>
               <ol style={{ paddingLeft: '20px', marginBottom: '15px' }}>
                 <li style={{ marginBottom: '5px' }}>위젯으로 사용할 <strong>Notion DB 페이지</strong> 열기</li>
-                <li style={{ marginBottom: '5px' }}>페이지 우측 상단 <strong>"⋯"</strong> (더보기) 버튼 클릭</li>
-                <li style={{ marginBottom: '5px' }}><strong>"Add connections"</strong> 선택</li>
-                <li style={{ marginBottom: '5px' }}>방금 생성한 Integration 이름 찾아서 <strong>"Connect"</strong> 클릭</li>
+                <li style={{ marginBottom: '5px' }}>페이지 우측 상단 <strong>&quot;⋯&quot;</strong> (더보기) 버튼 클릭</li>
+                <li style={{ marginBottom: '5px' }}><strong>&quot;Add connections&quot;</strong> 선택</li>
+                <li style={{ marginBottom: '5px' }}>방금 생성한 Integration 이름 찾아서 <strong>&quot;Connect&quot;</strong> 클릭</li>
               </ol>
 
               <div style={{ 

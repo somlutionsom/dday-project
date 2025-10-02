@@ -133,8 +133,6 @@ export default function DdayWidget({ initialData }: DdayWidgetProps) {
   }
 
   const dday = calculateDday(data.targetDate);
-  const isToday = dday === 'D-DAY';
-  const isPast = dday.startsWith('D+');
 
   // 테마 색상 가져오기
   const themeKey = data.colorTheme as keyof typeof THEME_COLORS;

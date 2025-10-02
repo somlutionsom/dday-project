@@ -44,7 +44,7 @@ export function decodeConfig(encoded: string): ConfigData | null {
   }
 }
 
-export function saveConfig(cfg: string, data: ConfigData): void {
+export function saveConfig(): void {
   // URL 기반이므로 실제 저장은 불필요
   console.log(`Config prepared for URL encoding`);
 }
